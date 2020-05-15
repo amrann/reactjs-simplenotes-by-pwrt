@@ -10,42 +10,47 @@ import {
 import Dashboard from '../Dashboard';
 import Login from '../Login';
 import Register from '../Register';
+import { Provider } from 'react-redux';
+import { store } from '../../../config/redux';
+
 
 
 
 function App() {
   return (
-    <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Dashboard</Link>
-            </li>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            <li>
-              <Link to="/regis">Register</Link>
-            </li>
-          </ul>
-        </nav>
+    <Provider store={store}>
+      <Router>
+        <div>
+          {/* <nav>
+            <ul>
+              <li>
+                <Link to="/">Dashboard</Link>
+              </li>
+              <li>
+                <Link to="/login">Login</Link>
+              </li>
+              <li>
+                <Link to="/regis">Register</Link>
+              </li>
+            </ul>
+          </nav> */}
 
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-        <Switch>
-          <Route path="/regis">
-            <Register />
-          </Route>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/">
-            <Dashboard />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
+          {/* A <Switch> looks through its children <Route>s and
+              renders the first one that matches the current URL. */}
+          <Switch>
+            <Route path="/regis">
+              <Register />
+            </Route>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/">
+              <Dashboard />
+            </Route>
+          </Switch>
+        </div>
+      </Router>
+    </Provider>
   );
 }
 
