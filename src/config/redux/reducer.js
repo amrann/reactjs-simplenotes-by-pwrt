@@ -1,6 +1,7 @@
 const inisialState = {
   popup: 'false',
   isLogin: false,
+  isLoading: false,
   nama: 'Meran'
 }
   
@@ -21,6 +22,12 @@ const inisialState = {
       return {
         ...state,  // mengopy nilai state
         nama: action.value
+      }
+    }
+    if(action.type === 'CHANGE_LOADING'){
+      return {
+        ...state,  // mengopy nilai state
+        isLoading: action.value
       }
     }
     return state;

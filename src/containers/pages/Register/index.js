@@ -1,11 +1,15 @@
 import React, {Component} from 'react';
 import './Register.scss'
 import firebase from '../../../config/firebase_config';
+import Button from '../../../component/atoms/buttons';
+import { connect } from 'react-redux';
+import { registerUntukAPI } from '../../../config/redux/action';
 
 class Register extends Component {
     state = {
         email: '',
-        password: ''
+        password: '',
+        isLoading: false
     }
 
     hendelChangeText = (e) => {
@@ -18,19 +22,17 @@ class Register extends Component {
     hendelRegisterSubmit = () => {
         const {email, password} = this.state;
         console.log('data before send: ', email, password)
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(res => {
-            console.log('success: ', res);
-        })
-        .catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log(errorCode, errorMessage)
-            // console.log('error code: ', errorCode);
-            // console.log('error message: ', errorMessage);
-            // ...
-        });
+        // this.setState({
+        //     isLoading: true
+        // })
+        // setTimeout(() => {
+        //     this.setState({
+        //         isLoading: false
+        //     })
+        // }, 5000)
+
+        this.props.registerAPI({email, password})
+
     }
 
     render(){
@@ -40,7 +42,8 @@ class Register extends Component {
                     <p className="auth-title">Register Page</p>
                     <input className="input" id="email" placeholder="Email" type="text" onChange={this.hendelChangeText}/>
                     <input className="input" id="password" placeholder="Password" type="password" onChange={this.hendelChangeText}/>
-                    <button className="btn" onClick={this.hendelRegisterSubmit}>Register</button>
+                    {/* <button className="btn" onClick={this.hendelRegisterSubmit}>Register</button> */}
+                    <Button onClick={this.hendelRegisterSubmit} namaButton="Register" loading={this.props.isLoading}/>
                 </div>
                 {/* <button>Go to Dashboard</button> */}
             </div>
@@ -48,4 +51,12 @@ class Register extends Component {
     }
 }
 
-export default Register;
+const reduxState = (state) => ({
+    isLoading: state.isLoading
+})
+
+const reduxDispatch = (dispatch) => ({
+    registerAPI: (data) => dispatch(registerUntukAPI(data))
+})
+
+export default connect(reduxState, reduxDispatch)(Register);
