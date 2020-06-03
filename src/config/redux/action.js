@@ -1,4 +1,4 @@
-import firebase from '../firebase_config'
+import firebase, {databes} from '../firebase_config'
 
 // sebuah function dalam function
 export const aksiUserNama = () => (dispatch) => {
@@ -35,7 +35,7 @@ export const registerUntukAPI = (data) => (dispatch) => {
         dispatch({type: 'CHANGE_LOADING', value: true})
         firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
         .then(res => {
-            console.log('success: ', res);
+            console.log('success registerUntukAPI: ', res);
             dispatch({type: 'CHANGE_LOADING', value: false})
             resolve(true)
         })
@@ -52,22 +52,26 @@ export const registerUntukAPI = (data) => (dispatch) => {
         })
     })
 } 
+
+
 export const loginUntukAPI = (data) => (dispatch) => {
     return new Promise ((resolve, reject) => {
         // melakukan dispatch
         dispatch({type: 'CHANGE_LOADING', value: true})
         firebase.auth().signInWithEmailAndPassword(data.email, data.password)
         .then(res => {
-            console.log('success: ', res);
+            console.log('success loginUntukAPI: ', res);
             const dataUser = {
                 email: res.user.email,
                 uid: res.user.uid,
-                emailVerifikasi: res.user.emailVerified
+                emailVerifikasi: res.user.emailVerified,
+                refreshToken: res.user.refreshToken
             }
             dispatch({type: 'CHANGE_LOADING', value: false})
             dispatch({type: 'CHANGE_ISLOGIN', value: true})
             dispatch({type: 'CHANGE_NAMA', value: dataUser})
-            resolve(true)
+            // resolve(true)
+            resolve(dataUser)
         })
         .catch(function(error) {
             // Handle Errors here.
@@ -83,3 +87,12 @@ export const loginUntukAPI = (data) => (dispatch) => {
         })  
     })
 } 
+
+export const tambahDataAPI = (data) => (dispatch) => {
+    databes.ref('notes/' + data.userId).push({
+        // data2 dibawah ini ada pada index\Dashboard
+        judul: data.judul,
+        konten: data.konten,
+        tanggal: data.tanggal
+    })
+}

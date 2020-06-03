@@ -27,7 +27,7 @@ class Login extends Component {
 
         const r = await this.props.loginAPI({email, password}).catch(err => err); // data dikirim ke redux-thunk yg telah dibuat
         if (r){
-            console.log('login berhasil')
+            console.log('login berhasil hendelLoginSubmit', r)
             this.setState({
                 email: '',
                 password: ''
@@ -73,6 +73,7 @@ class Login extends Component {
 // })
 
 const reduxState = (state) => ({
+    // didapat dari redux/reducer.js
     isLoading: state.isLoading
 })
 

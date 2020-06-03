@@ -2,7 +2,8 @@ const inisialState = {
   popup: 'false',
   isLogin: false,
   isLoading: false,
-  nama: 'Meran'
+  // nama: 'Meran'
+  nama: {}
 }
   
   const reduser = (state=inisialState, action) => {
