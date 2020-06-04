@@ -119,3 +119,22 @@ export const panggilDataDariFirebase = (userId) => (dispatch) => {
     })
 
 }
+
+// method ini bertujuan untuk mengedit data yang sudah ada pada firebase
+export const editDataDariFirebase = (data) => (dispatch) => {
+    const urlNotes = databes.ref(`notes/${data.userId}/${data.noteId}`);
+    return new Promise ((resolve, reject) => {
+        urlNotes.set({
+            judul: data.judul,
+            konten: data.konten,
+            tanggal: data.tanggal
+        }, (err) => {
+            if(err) {
+                reject (false);
+            } else {
+                resolve (true)
+            }
+        })
+    })
+
+}

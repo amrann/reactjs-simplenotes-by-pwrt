@@ -1,13 +1,15 @@
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
-import { tambahDataAPI, panggilDataDariFirebase } from '../../../config/redux/action';
+import { tambahDataAPI, panggilDataDariFirebase, editDataDariFirebase } from '../../../config/redux/action';
 import './Dashboard.scss'
 
 class Dashboard extends Component {
     state = {
         judul: '',
         konten: '',
-        tanggal: ''
+        tanggal: '',
+        teksButton: 'SIMPAN',
+        iniNoteID: ''
     }
 
     componentDidMount(){
@@ -20,8 +22,8 @@ class Dashboard extends Component {
         //contoh
         // alert('hai')
 
-        const {judul, konten} = this.state;
-        const {simpanDataNotes} = this.props
+        const {judul, konten, teksButton, iniNoteID} = this.state;
+        const {simpanDataNotes, updateNotes} = this.props
         
         // berfungsi untuk meng-get (dari localstorage) data pengguna yang login
         const dataPengguna = JSON.parse(localStorage.getItem('dataPengguna'))
@@ -30,11 +32,26 @@ class Dashboard extends Component {
             judul: judul,
             konten: konten,
             tanggal: new Date().getTime(),
+            // userId dari file action.js pada method editDataDariFirebase
             userId: dataPengguna.uid
         }
 
-        simpanDataNotes(iniDataDariForm) 
+        if(teksButton === 'SIMPAN'){
+            simpanDataNotes(iniDataDariForm) 
+        } else{
+            // noteId dari file action.js pada method editDataDariFirebase
+            iniDataDariForm.noteId = iniNoteID
+            updateNotes(iniDataDariForm)
+        }
         // console.log(iniDataDariForm)
+    }
+
+    hendelTombolKensel = () => {
+        this.setState({
+            judul: '',
+            konten: '',
+            teksButton: 'SIMPAN'
+        })
     }
 
     onInputChange = (e, tipe) => {
@@ -42,6 +59,17 @@ class Dashboard extends Component {
             [tipe] : e.target.value
         })
     }
+
+    editNotes = (cttn) => {
+        console.log(cttn)
+        this.setState({
+            judul: cttn.dataAray.judul,
+            konten: cttn.dataAray.konten,
+            teksButton: 'EDIT',
+            iniNoteID: cttn.id
+        })
+    }
+
     
     render(){
         const {judul, konten, tanggal} = this.state;
@@ -58,7 +86,14 @@ class Dashboard extends Component {
                     <textarea placeholder="content" className="input-content" value={konten} onChange={(e) => this.onInputChange(e, 'konten')}>
 
                     </textarea>
-                    <button className="save-btn" onClick={this.hendelTombolSimpan}>Simpan</button>
+                    <div className="aksiButton">
+                        {
+                            this.state.teksButton === 'EDIT' ? (
+                                <button className="save-btn cancel" onClick={this.hendelTombolKensel}>CANCEL</button>
+                            ) : <div/>
+                        }
+                        <button className="save-btn" onClick={this.hendelTombolSimpan}>{this.state.teksButton}</button>
+                    </div>
                 </div>
                 <hr/>
                 {
@@ -67,7 +102,7 @@ class Dashboard extends Component {
                             {
                                 this.props.notes.map(note => {
                                     return (
-                                        <div className="card-content" key={note.id}>
+                                        <div className="card-content" key={note.id} onClick={() => this.editNotes(note)}>
                                             <p className="judul">{note.dataAray.judul}</p>
                                             <p className="tanggal">{note.dataAray.tanggal}</p>
                                             <p className="konten">{note.dataAray.konten}</p>
@@ -91,7 +126,8 @@ const reduxxState = (state) => ({
 
 const reduxxDispatch = (dispatch) => ({
     simpanDataNotes : (iniDataDariForm) => dispatch(tambahDataAPI(iniDataDariForm)),
-    getNotes: (iniDataDariForm) => dispatch(panggilDataDariFirebase(iniDataDariForm))
+    getNotes: (iniDataDariForm) => dispatch(panggilDataDariFirebase(iniDataDariForm)),
+    updateNotes: (iniDataDariForm) => dispatch(editDataDariFirebase(iniDataDariForm))
 })
 
 export default connect(reduxxState, reduxxDispatch) (Dashboard);

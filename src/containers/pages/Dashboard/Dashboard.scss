@@ -43,6 +43,15 @@
             font-weight: bold;
             text-transform: uppercase;
             outline: none;
+            &.cancel {
+                border: 2px solid orange;
+                color: orange;
+            }
+        }
+        .aksiButton {
+            display: flex;
+            justify-content: space-between;
+            width: 40%;
         }
     }
 
@@ -52,6 +61,12 @@
         padding: 16px;
         box-shadow: 4px 3px 9px black;
         margin-bottom: 16px;
+        transition: all ease 0.35s;
+        &:hover {
+            cursor: pointer;
+            background: rgba(29, 29, 29, 0.329);
+            transform: translate(-2px);
+        }
         p {
             margin: 0px;
         }
