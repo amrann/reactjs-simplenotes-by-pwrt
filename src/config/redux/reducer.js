@@ -3,7 +3,8 @@ const inisialState = {
   isLogin: false,
   isLoading: false,
   // nama: 'Meran'
-  nama: {}
+  nama: {},
+  iniNotes: {}
 }
   
   const reduser = (state=inisialState, action) => {
@@ -29,6 +30,12 @@ const inisialState = {
       return {
         ...state,  // mengopy nilai state
         isLoading: action.value
+      }
+    }
+    if(action.type === 'SET_NOTES'){
+      return {
+        ...state,  // mengopy nilai state
+        iniNotes: action.value
       }
     }
     return state;

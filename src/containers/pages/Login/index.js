@@ -28,6 +28,9 @@ class Login extends Component {
         const r = await this.props.loginAPI({email, password}).catch(err => err); // data dikirim ke redux-thunk yg telah dibuat
         if (r){
             console.log('login berhasil hendelLoginSubmit', r)
+            // berfungsi untuk menyimpan data user ke storage local (bisa di cek pada inspect element kemudian application) saat login, sehingga ketika terjadi refresh, username tidak terhapus
+            localStorage.setItem('dataPengguna', JSON.stringify(r)) 
+            
             this.setState({
                 email: '',
                 password: ''

@@ -96,3 +96,26 @@ export const tambahDataAPI = (data) => (dispatch) => {
         tanggal: data.tanggal
     })
 }
+
+// method ini bertujuan untuk memanggil data yang sudah ada pada firebase
+export const panggilDataDariFirebase = (userId) => (dispatch) => {
+    const urlNotes = databes.ref('notes/' + userId);
+    return new Promise ((resolve, reject) => {
+        urlNotes.on('value', function (snapshot) {
+            console.log('get Data Firebes : ', snapshot.val())
+
+            //ngelooping data-data yg ada dalam tiap id
+            const dataAray = []
+            Object.keys(snapshot.val()).map(key => {
+                dataAray.push({
+                    id: key,
+                    dataAray: snapshot.val()[key]
+                })
+            })
+            
+            dispatch({type: 'SET_NOTES', value: dataAray})
+            resolve(snapshot.val())
+        })
+    })
+
+}

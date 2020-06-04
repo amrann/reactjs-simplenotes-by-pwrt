@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
-import { tambahDataAPI } from '../../../config/redux/action';
+import { tambahDataAPI, panggilDataDariFirebase } from '../../../config/redux/action';
 import './Dashboard.scss'
 
 class Dashboard extends Component {
@@ -8,6 +8,11 @@ class Dashboard extends Component {
         judul: '',
         konten: '',
         tanggal: ''
+    }
+
+    componentDidMount(){
+        const dataPengguna = JSON.parse(localStorage.getItem('dataPengguna'))
+        this.props.getNotes(dataPengguna.uid);
     }
     
     // method yang akan menghendel tombol simpan ketika di klik
@@ -17,11 +22,15 @@ class Dashboard extends Component {
 
         const {judul, konten} = this.state;
         const {simpanDataNotes} = this.props
+        
+        // berfungsi untuk meng-get (dari localstorage) data pengguna yang login
+        const dataPengguna = JSON.parse(localStorage.getItem('dataPengguna'))
+        
         const iniDataDariForm = {
             judul: judul,
             konten: konten,
             tanggal: new Date().getTime(),
-            userId: this.props.userData.uid
+            userId: dataPengguna.uid
         }
 
         simpanDataNotes(iniDataDariForm) 
@@ -36,6 +45,7 @@ class Dashboard extends Component {
     
     render(){
         const {judul, konten, tanggal} = this.state;
+        console.log('notes: ', this.props.notes)
         return(
             // <div>
             //     <p>Dashboard Page</p>
@@ -51,11 +61,23 @@ class Dashboard extends Component {
                     <button className="save-btn" onClick={this.hendelTombolSimpan}>Simpan</button>
                 </div>
                 <hr/>
-                <div className="card-content">
-                    <p className="judul">Title</p>
-                    <p className="tanggal">18 Mei 2020</p>
-                    <p className="konten">Content note</p>
-                </div>
+                {
+                    this.props.notes.length > 0 ? (
+                        <Fragment>
+                            {
+                                this.props.notes.map(note => {
+                                    return (
+                                        <div className="card-content" key={note.id}>
+                                            <p className="judul">{note.dataAray.judul}</p>
+                                            <p className="tanggal">{note.dataAray.tanggal}</p>
+                                            <p className="konten">{note.dataAray.konten}</p>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </Fragment>
+                    ) : null
+                }
             </div>
         )
     }
@@ -63,11 +85,13 @@ class Dashboard extends Component {
 
 const reduxxState = (state) => ({
     // userData ini didapat pada redux/reducer.js
-    userData: state.nama
+    userData: state.nama,
+    notes: state.iniNotes
 })
 
 const reduxxDispatch = (dispatch) => ({
-    simpanDataNotes : (iniDataDariForm) => dispatch(tambahDataAPI(iniDataDariForm))
+    simpanDataNotes : (iniDataDariForm) => dispatch(tambahDataAPI(iniDataDariForm)),
+    getNotes: (iniDataDariForm) => dispatch(panggilDataDariFirebase(iniDataDariForm))
 })
 
 export default connect(reduxxState, reduxxDispatch) (Dashboard);
