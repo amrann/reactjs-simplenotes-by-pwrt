@@ -138,3 +138,12 @@ export const editDataDariFirebase = (data) => (dispatch) => {
     })
 
 }
+
+// method ini bertujuan untuk menghapus data yang sudah ada pada firebase
+export const hapusDataDariFirebase = (data) => (dispatch) => {
+    const urlNotes = databes.ref(`notes/${data.userId}/${data.noteId}`);
+    return new Promise ((resolve, reject) => {
+        urlNotes.remove();
+    })
+
+}

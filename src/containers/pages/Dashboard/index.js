@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
-import { tambahDataAPI, panggilDataDariFirebase, editDataDariFirebase } from '../../../config/redux/action';
+import { tambahDataAPI, panggilDataDariFirebase, editDataDariFirebase, hapusDataDariFirebase} from '../../../config/redux/action';
 import './Dashboard.scss'
 
 class Dashboard extends Component {
@@ -70,6 +70,17 @@ class Dashboard extends Component {
         })
     }
 
+    hapusNotes = (e, cttn) => {
+        e.stopPropagation(); // untuk menyetop click parent-nya
+        const dataPengguna = JSON.parse(localStorage.getItem('dataPengguna'))
+        const dataDelete = {
+            userId: dataPengguna.uid,
+            noteId: cttn.id
+        }
+        // alert('hai')
+        this.props.deleteNotes(dataDelete)
+    }
+
     
     render(){
         const {judul, konten, tanggal} = this.state;
@@ -106,6 +117,7 @@ class Dashboard extends Component {
                                             <p className="judul">{note.dataAray.judul}</p>
                                             <p className="tanggal">{note.dataAray.tanggal}</p>
                                             <p className="konten">{note.dataAray.konten}</p>
+                                            <div className="btn-hapus" onClick={(elemen) => this.hapusNotes(elemen, note)}>X</div>
                                         </div>
                                     )
                                 })
@@ -127,7 +139,8 @@ const reduxxState = (state) => ({
 const reduxxDispatch = (dispatch) => ({
     simpanDataNotes : (iniDataDariForm) => dispatch(tambahDataAPI(iniDataDariForm)),
     getNotes: (iniDataDariForm) => dispatch(panggilDataDariFirebase(iniDataDariForm)),
-    updateNotes: (iniDataDariForm) => dispatch(editDataDariFirebase(iniDataDariForm))
+    updateNotes: (iniDataDariForm) => dispatch(editDataDariFirebase(iniDataDariForm)),
+    deleteNotes: (data) => dispatch(hapusDataDariFirebase(data))
 })
 
 export default connect(reduxxState, reduxxDispatch) (Dashboard);

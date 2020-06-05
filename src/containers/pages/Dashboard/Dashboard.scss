@@ -62,6 +62,7 @@
         box-shadow: 4px 3px 9px black;
         margin-bottom: 16px;
         transition: all ease 0.35s;
+        position: relative;
         &:hover {
             cursor: pointer;
             background: rgba(29, 29, 29, 0.329);
@@ -80,6 +81,23 @@
         .konten {
             margin-top: 20px;
             font-size: 14px;
+        }
+        .btn-hapus {
+            width: 30px;
+            height: 30px;
+            background: red;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: white;
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            &:hover {
+                cursor: pointer;
+            }
         }
     }   
 }
